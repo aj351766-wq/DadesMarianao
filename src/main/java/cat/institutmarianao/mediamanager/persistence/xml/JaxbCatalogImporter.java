@@ -40,6 +40,11 @@ public class JaxbCatalogImporter {
      * @throws ExerciseNotImplementedException while this exercise is unfinished
      */
     public List<MediaContent> importContents(File input) throws IOException {
+    	
+    	
+    	
+    	
+    	
         // TODO Task 1: Implement the JaxbCatalogImporter operation.
         throw new ExerciseNotImplementedException("Task 1: JaxbCatalogImporter");
     }

@@ -44,6 +44,8 @@ public class DomCatalogExporter {
     public void exportCatalog(File output, Collection<? extends MediaContent> contents)
             throws IOException {
         // TODO Task 4: Implement the DomCatalogExporter operation.
+    	
+    	
         throw new ExerciseNotImplementedException("Task 4: DomCatalogExporter");
     }
 }

@@ -92,7 +92,12 @@ public final class Main {
             if (isImportSelected(mode, task)) {
                 importStatuses.put(task, runImport(task, input));
             } else {
-                report(task.id + " import", input, Status.NOT_SELECTED, NOT_REQUESTED);
+                try {
+					report(task.id + " import", input, Status.NOT_SELECTED, NOT_REQUESTED);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
             }
         }
         printCatalogSummary();
