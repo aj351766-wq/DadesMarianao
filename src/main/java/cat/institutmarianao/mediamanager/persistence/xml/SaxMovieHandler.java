@@ -1,5 +1,6 @@
 package cat.institutmarianao.mediamanager.persistence.xml;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,8 +12,16 @@ import cat.institutmarianao.mediamanager.model.Movie;
 
 public class SaxMovieHandler extends DefaultHandler{
 	
-	private List llistatMovies;
-	private Movie movieActual;
+	private List<Movie> llistatMovies;
+
+	private String title;
+	private String director;
+	private String genre;
+	private String platform;
+
+	private LocalDate releaseDate;
+	private int runtime;
+
 	private StringBuilder contingut;
 	private String etiquetaActual;
 	
@@ -43,10 +52,22 @@ public class SaxMovieHandler extends DefaultHandler{
 	 public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         contingut.setLength(0);
         
-        if("fil,".equalsIgnoreCase(qName)) {
-        	movieActual= new Movie();
+        if("film".equalsIgnoreCase(qName)) {
+            title = attributes.getValue("name");
+            director = null;
+            genre = null;
+            platform = null;
+            releaseDate = null;
+            runtime = 0;
+            
+            String released = attributes.getValue("released");
+
+            if (released != null) {
+                releaseDate = LocalDate.parse(released);
+            }
+        	
         }
-        
+
         if("creators".equalsIgnoreCase(qName)) {
         	etiquetaActual="creators";
         } else if ("classification".equalsIgnoreCase(qName)) {
@@ -56,9 +77,13 @@ public class SaxMovieHandler extends DefaultHandler{
         }
         
         
-        if("footage".equalsIgnoreCase(qName) && movieActual != null) {
+        if("footage".equalsIgnoreCase(qName)) {
         	
-        	movieActual.setRuntime(Integer.parseInt (attributes.getValue("minutes")));
+        	String minutes = attributes.getValue("minutes");
+        	
+            if (minutes != null) {
+                runtime = Integer.parseInt(minutes);
+            }
         	
         }
         
@@ -75,33 +100,41 @@ public class SaxMovieHandler extends DefaultHandler{
     public void endElement(String uri, String localName, String qName) throws SAXException {
     	String dades= contingut.toString().trim();
     	
-    	if(movieActual!=null) {
+
     		switch(qName.toLowerCase()) {
     		case "name":
-    			movieActual.setTitle(dades);
+    		    if ("creators".equals(etiquetaActual)) {
+    		    	director = dades;
+
+    		    } else if ("classification".equals(etiquetaActual)) {
+    		    	genre = dades;
+
+    		    } else if ("availability".equals(etiquetaActual)) {
+    		        platform = dades;
+    		    }
     			break;
     		
     		
         case "creators":
-        	movieActual.setDirector(dades);
-        	break;
-        
         case "classification":
-        	movieActual.setGenre(dades);
-        	break;
-        	
         case "availability":
             etiquetaActual = "";
             break;
 
         
         case "film":
-            llistatMovies.add(movieActual);
-            movieActual = null;
+            llistatMovies.add(new Movie(
+                    title,
+                    director,
+                    genre,
+                    releaseDate,
+                    platform,
+                    runtime
+                ));
+            
             break;
     	
     }
-}
     	
     	contingut.setLength(0);
     	

@@ -2,11 +2,20 @@ package cat.institutmarianao.mediamanager.persistence.json;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
-import cat.institutmarianao.mediamanager.model.MediaContent;
-import cat.institutmarianao.mediamanager.persistence.ExerciseNotImplementedException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
+
+import cat.institutmarianao.mediamanager.model.JackSonCatalog;
+import cat.institutmarianao.mediamanager.model.MediaContent;
+import cat.institutmarianao.mediamanager.model.Movie;
+import cat.institutmarianao.mediamanager.model.Episode;
+import cat.institutmarianao.mediamanager.model.Series;
+import cat.institutmarianao.mediamanager.model.Season;
+import cat.institutmarianao.mediamanager.persistence.ExerciseNotImplementedException;
 /**
  * Student exercise for importing contents_jackson.json using Jackson ObjectMapper.readValue() with student-created binding classes.
  * File access must use traditional Java I/O. This class does not manage a Catalog.
@@ -39,8 +48,9 @@ public class JacksonCatalogImporter {
      *         validation fails; preserve the cause and useful file context
      * @throws ExerciseNotImplementedException while this exercise is unfinished
      */
+
+    
     public List<MediaContent> importContents(File input) throws IOException {
-        // TODO Task 2: Implement the JacksonCatalogImporter operation.
-        throw new ExerciseNotImplementedException("Task 2: JacksonCatalogImporter");
+    	
     }
-}
+

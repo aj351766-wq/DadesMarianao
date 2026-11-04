@@ -4,6 +4,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
+import org.xml.sax.SAXException;
+
 import cat.institutmarianao.mediamanager.model.Movie;
 import cat.institutmarianao.mediamanager.persistence.ExerciseNotImplementedException;
 
@@ -38,14 +44,47 @@ public class SaxMovieImporter {
      * @throws NullPointerException if input is null after implementation
      * @throws IOException if reading, parsing, binding, configuration or data
      *         validation fails; preserve the cause and useful file context
+     * @throws ParserConfigurationException 
+     * @throws SAXException 
      * @throws ExerciseNotImplementedException while this exercise is unfinished
      */
     public List<Movie> importMovies(File input) throws IOException {
-    	
-    	
-    	
-    	
-        // TODO Task 1: Implement the SaxMovieImporter operation.
-        throw new ExerciseNotImplementedException("Task 1: SaxMovieImporter");
+
+        if (input == null) {
+            throw new NullPointerException("El archivo de entrada no puede ser null");
+        }
+
+        try {
+            SAXParserFactory factory = SAXParserFactory.newInstance();
+
+            factory.setNamespaceAware(true);
+            factory.setValidating(false);
+
+            // Seguridad: evitar XXE y entidades externas
+            factory.setFeature(
+                "http://xml.org/sax/features/external-general-entities", false
+            );
+            factory.setFeature(
+                "http://xml.org/sax/features/external-parameter-entities", false
+            );
+            factory.setFeature(
+                "http://apache.org/xml/features/nonvalidating/load-external-dtd", false
+            );
+
+            SAXParser parser = factory.newSAXParser();
+
+            SaxMovieHandler handler = new SaxMovieHandler();
+
+            // Utilizamos el archivo recibido por parámetro
+            parser.parse(input, handler);
+
+            return handler.getllistatMovies();
+
+        } catch (ParserConfigurationException | SAXException e) {
+            throw new IOException(
+                "Error al importar el archivo XML: " + input.getAbsolutePath(),
+                e
+            );
+        }
     }
 }

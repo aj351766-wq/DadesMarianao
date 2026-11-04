@@ -26,9 +26,7 @@ public final class Movie extends MediaContent {
         this.runtime = requirePositive(runtime, "runtime");
     }
 
-    public Movie() {
-    	
-    }
+
     /**
      * Returns the movie duration.
      * @return positive runtime in minutes

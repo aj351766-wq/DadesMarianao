@@ -111,13 +111,22 @@ public class DomMovieImporter {
 					     .trim()
 					);
 				
-				String title= e.getElementsByTagName(ETIQUETA_NAME).toString().trim();
+				String title = e.getElementsByTagName(ETIQUETA_NAME)
+		                .item(0)
+		                .getTextContent()
+		                .trim();
 				
 				Element director =(Element) e.getElementsByTagName(ETIQUETA_DIRECTOR).item(0);
 				
-				String directorName= director.getElementsByTagName(ETIQUETA_NAME).toString().trim();
+				String directorName = director.getElementsByTagName(ETIQUETA_NAME)
+                        .item(0)
+                        .getTextContent()
+                        .trim();
 				
-				String genere= e.getElementsByTagName(ETIQUETA_GENERE).toString().trim();
+				String genere = e.getElementsByTagName(ETIQUETA_GENERE)
+		                 .item(0)
+		                 .getTextContent()
+		                 .trim();
 				
 				LocalDate releaseDate = LocalDate.parse(
 					    e.getElementsByTagName(ETIQUETA_REALEASEDATE)
@@ -127,9 +136,17 @@ public class DomMovieImporter {
 					    formateador
 					);
 			
-				String platform= e.getElementsByTagName(ETIQUETA_PLATFORM).toString().trim();
+				String platform = e.getElementsByTagName(ETIQUETA_PLATFORM)
+		                   .item(0)
+		                   .getTextContent()
+		                   .trim();
 				
-				int runTime = Integer.parseInt(e.getElementsByTagName(ETIQUETA_RUNTIME).toString().trim());
+				int runTime = Integer.parseInt(
+					    e.getElementsByTagName(ETIQUETA_RUNTIME)
+					     .item(0)
+					     .getTextContent()
+					     .trim()
+					);
 			
 				/*String title, String director, String genre,
 			    LocalDate releaseDate, String platform, int runtime) {
