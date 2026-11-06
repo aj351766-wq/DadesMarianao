@@ -35,7 +35,6 @@ public class GsonCatalogImporter {
         try (Reader reader = new InputStreamReader(
                 new FileInputStream(input), StandardCharsets.UTF_8)) {
 
-            // Leer el JSON y convertirlo en objetos Java
             Gson gson = new Gson();
 
             CatalogJson catalog =
@@ -45,7 +44,7 @@ public class GsonCatalogImporter {
                 throw new IOException("El JSON no contiene items.");
             }
 
-            // Recorrer las películas y las series
+
             for (ItemJson item : catalog.items) {
 
                 LocalDate date =

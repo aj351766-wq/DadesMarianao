@@ -1,11 +1,17 @@
 package cat.institutmarianao.mediamanager.persistence.text;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
+import cat.institutmarianao.mediamanager.model.ContenidoOrdenable;
 import cat.institutmarianao.mediamanager.model.MediaContent;
-import cat.institutmarianao.mediamanager.persistence.ExerciseNotImplementedException;
 
 /**
  * Student exercise for generating list.txt using sequential text output.
@@ -18,28 +24,45 @@ public class TextCatalogExporter {
     public TextCatalogExporter() {
     }
 
-    /**
-     * Replaces the requested file with the catalogue representation for Task 3.
-     * Write only code, title and director separated by semicolons, one content per line.
-     * Sort all contents together by ascending title, ignoring case, then by
-     * ascending internal code for equal titles.
-     *
-     * <p>Receive already-coded objects and preserve their values, relationships
-     * and original collection orders. Write UTF-8 using traditional Java I/O,
-     * close resources, and do not print to the console. Replace previous output
-     * completely; do not append. The caller creates missing parent directories.
-     *
-     * @param output destination file; never null
-     * @param contents non-null catalogue collection with non-null, coded objects
-     * @throws NullPointerException if an argument or content is null after implementation
-     * @throws IllegalArgumentException if contents contain unassigned codes
-     * @throws IOException if output, configuration or serialization fails;
-     *         preserve the cause and useful file context
-     * @throws ExerciseNotImplementedException while this exercise is unfinished
-     */
     public void exportCatalog(File output, Collection<? extends MediaContent> contents)
             throws IOException {
-        // TODO Task 3: Implement the TextCatalogExporter operation.
-        throw new ExerciseNotImplementedException("Task 3: TextCatalogExporter");
-    }
-}
+    	
+    	
+            List<ContenidoOrdenable> contentsSorted = new ArrayList<>();
+
+            
+            for (MediaContent contenido : contents) {
+
+                int codigo = contenido.getCode(); 
+
+                contentsSorted.add(new ContenidoOrdenable(codigo, contenido));
+            }
+            
+            Collections.sort(contentsSorted);
+    	
+    		try (BufferedWriter out = new BufferedWriter(
+    		        new FileWriter(output, StandardCharsets.UTF_8))) {
+
+    			
+    			for (ContenidoOrdenable contenidoOrdenable : contentsSorted) {
+
+                    MediaContent contenido = contenidoOrdenable.getContenido();
+
+                    String linea = contenidoOrdenable.getCodigo() + ";"
+                            + contenido.getTitle() + ";"
+                            + contenido.getDirector();
+
+                    out.write(linea);
+                    out.newLine();
+                }
+            }
+        }
+    			
+    		
+}	
+    		
+    		
+        
+    	
+    	
+    

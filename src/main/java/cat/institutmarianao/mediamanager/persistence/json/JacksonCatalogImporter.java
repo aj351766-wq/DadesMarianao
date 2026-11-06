@@ -8,13 +8,12 @@ import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-
+import cat.institutmarianao.mediamanager.model.Episode;
 import cat.institutmarianao.mediamanager.model.JackSonCatalog;
 import cat.institutmarianao.mediamanager.model.MediaContent;
 import cat.institutmarianao.mediamanager.model.Movie;
-import cat.institutmarianao.mediamanager.model.Episode;
-import cat.institutmarianao.mediamanager.model.Series;
 import cat.institutmarianao.mediamanager.model.Season;
+import cat.institutmarianao.mediamanager.model.Series;
 import cat.institutmarianao.mediamanager.persistence.ExerciseNotImplementedException;
 /**
  * Student exercise for importing contents_jackson.json using Jackson ObjectMapper.readValue() with student-created binding classes.
@@ -51,6 +50,73 @@ public class JacksonCatalogImporter {
 
     
     public List<MediaContent> importContents(File input) throws IOException {
-    	
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        JackSonCatalog catalog = mapper.readValue(input, JackSonCatalog.class);
+
+        List<MediaContent> mediaRecords = new ArrayList<>();
+
+        for (JackSonCatalog.MediaRecord record : catalog.getRecords()) {
+
+            // Datos generales
+            String title = record.getTitle();
+            String director = record.getDirector();
+            String genre = record.getGenre();
+            String releaseDateString = record.getReleaseDate();
+            LocalDate releaseDate = LocalDate.parse(releaseDateString);
+            String platform = record.getPlatform();
+
+            if ("MOVIE".equals(record.getMediaType())) {
+
+                // Datos específicos de la película
+                int runtime = record.getMovieDetails().getDurationMinutes();
+
+                Movie movie = new Movie(
+                    title, director, genre, releaseDate, platform, runtime
+                );
+
+                mediaRecords.add(movie);
+
+            } else if ("SERIES".equals(record.getMediaType())) {
+
+                Series series = new Series(
+                    title, director, genre, releaseDate, platform
+                );
+
+                // Aquí construimos las temporadas y sus episodios
+                for (JackSonCatalog.Season seasonData : record.getSeriesDetails().getSeasons()) {
+
+                    int seasonNumber = seasonData.getSeasonNumber();
+
+                    List<Episode> episodes = new ArrayList<>();
+
+                    for (JackSonCatalog.Chapter chapterData : seasonData.getChapters()) {
+
+                        int chapterNumber = chapterData.getChapterNumber();
+                        String chapterTitle = chapterData.getTitle();
+                        int chapterDuration = chapterData.getDurationMinutes();
+
+                        Episode episode = new Episode(
+                            chapterNumber, chapterTitle, chapterDuration
+                        );
+
+                        episodes.add(episode);
+                    }
+
+                    Season season = new Season(seasonNumber);
+
+                    // Añadir temporada a la serie
+                    // Aquí necesitamos utilizar el método correspondiente de Series.
+                }
+
+                mediaRecords.add(series);
+            }
+        }
+
+        return mediaRecords;
     }
+
+
+}
 
